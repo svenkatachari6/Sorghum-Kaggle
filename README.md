@@ -1,4 +1,6 @@
 # Sorghum - Kaggle Contest
+```
+
 usage: train.py [-h] [-j N] [--epochs N] [--start-epoch N] [-b N] [--lr LR]
                 [--momentum M] [--weight-decay W] [--print-freq N]
                 [--resume PATH] [-e]
@@ -23,3 +25,5 @@ optional arguments:
   --print-freq N, -p N  print frequency (default: 10)
   --resume PATH         path to latest checkpoint (default: none)
   -e, --evaluate        evaluate model on validation set
+  
+  ```
