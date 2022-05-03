@@ -9,7 +9,7 @@ except ImportError:
     accimage = None
 import pandas as pd
 import numpy as np
-
+import csv
 
 
 def _is_tensor_image(img):
@@ -53,15 +53,26 @@ def l2normalize(tensor):
     return norm_tensor
 
 def make_dataset (traindir, if_train = True):
+    file_path = os.path.join(traindir, 'train_cultivar_mapping.csv')
     img = []
     cnt = 0
-    for fname in sorted(os.listdir(traindir)):
-        # target = int(float(fname[15:16]))
-        target = int(float(fname[3:5])) - 1
-        path = os.path.join(traindir, fname)
-        item = (path, target)
-        img.append(item)
-        cnt += 1
+    target_dict = {}
+    target_cnt = 0
+    with open(file_path, 'r') as f:
+        f.readline()
+        reader = csv.reader(f, delimiter=',')
+        for line in reader:
+            target_name = line[1]
+            if target_name in target_dict:
+                pass
+            else:
+                target_dict[target_name] = target_cnt
+                target_cnt += 1
+            path = os.path.join(traindir, line[0])
+            item = (path, target_dict[target_name])
+            if target_dict[target_name]<=2:
+                img.append(item)
+                cnt += 1
     return img
 
 

@@ -66,7 +66,8 @@ def main():
     #                                           num_workers=args.workers, pin_memory=True)
 
     dataset = utils.CURETSRDataset(traindir, transforms.Compose([
-        transforms.Resize([28, 28]), transforms.ToTensor(), utils.l2normalize, utils.standardization]))
+        transforms.Resize([256, 256]), transforms.RandomRotation(degrees=30), 
+        transforms.ToTensor(), utils.l2normalize, utils.standardization]))
     
     validation_split = .2
     shuffle_dataset = True

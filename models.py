@@ -10,9 +10,9 @@ class Net(nn.Module):
         self.pool = nn.MaxPool2d(2, 2)
         self.conv2 = nn.Conv2d(6, 16, 5)
         self.conv2d_drop = nn.Dropout(p=0.2)
-        self.fc1 = nn.Linear(16 * 4 * 4, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 14)
+        self.fc1 = nn.Linear(16 * 4 * 4, 256)
+        self.fc2 = nn.Linear(256, 128)
+        self.fc3 = nn.Linear(128, 100)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))

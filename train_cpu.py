@@ -19,7 +19,7 @@ import models
 # from logger import Logger
 
 
-parser = argparse.ArgumentParser(description='CURE-TSR Training and Evaluation')
+parser = argparse.ArgumentParser(description='Sorghum Dataset Training and Evaluation')
 
 parser.add_argument('data', metavar='DIR',
                     help='path to dataset')
@@ -56,22 +56,34 @@ def main():
     # Data loading code
     # args.data: path to the dataset
 
-    traindir = os.path.join(args.data, 'ChallengeFree/train')
-
-    # Reference: https://stackoverflow.com/questions/50544730/how-do-i-split-a-custom-dataset-into-training-and-test-datasets
+    traindir = os.path.join(args.data, 'train_images')
 
     # Load training and validation from the same folder using Sampler
     alex_net = False
     sm20 = False
     if alex_net:
         dataset = utils.SorghumDataset(traindir, transforms.Compose([
-            transforms.Resize([227, 227]), transforms.ToTensor(), utils.l2normalize, utils.standardization]))
+            transforms.Resize([256, 256]), 
+            transforms.RandomRotation(degrees=30),
+            transforms.ToTensor(), 
+            utils.l2normalize, 
+            utils.standardization
+            ]))
     elif sm20:
         dataset = utils.SorghumDataset(traindir, transforms.Compose([
-            transforms.Resize([20, 20]), transforms.ToTensor(), utils.l2normalize, utils.standardization]))
+            transforms.Resize([256, 256]), 
+            transforms.RandomRotation(degrees=30),
+            transforms.ToTensor(), 
+            utils.l2normalize, 
+            utils.standardization
+            ]))
     else:
         dataset = utils.SorghumDataset(traindir, transforms.Compose([
-            transforms.Resize([28, 28]), transforms.ToTensor(), utils.l2normalize, utils.standardization]))
+            transforms.Resize([256, 256]), 
+            transforms.ToTensor(), 
+            utils.l2normalize, 
+            utils.standardization
+            ]))
 
     validation_split = .2
     shuffle_dataset = True
@@ -107,6 +119,7 @@ def main():
     # model = models.SoftmaxClassifier()
     # model = models.AlexNetSoftMax()
     # model = models.Softmax20()
+
     if device.type == "cuda":
         model = torch.nn.DataParallel(model).cuda()
     else:
@@ -114,10 +127,11 @@ def main():
     print("=> creating model %s " % model.__class__.__name__)
 
     savedir = 'CNN_iter'
-    checkpointdir = os.path.join('./checkpoints', savedir)
+    checkpointdir = os.path.join('checkpoints', savedir)
 
     if not debug:
-        os.mkdir(checkpointdir)
+        if not os.path.exists(checkpointdir):
+            os.makedirs(checkpointdir)
         print('log directory: %s' % os.path.join('./logs', savedir))
         print('checkpoints directory: %s' % checkpointdir)
 
